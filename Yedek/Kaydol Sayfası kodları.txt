@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kaydol</title>
+
+</head>
+<body background="Arkaplan.png">          <!-- arka plan resmi-->        
+    <table>
+        <tr>
+            <td>
+                <img src="logo.jpeg"width="350" height="350">                                <!--logonun yer aldığı kısım-->
+              
+                <td>
+                    <form method="POST" action="" >
+                        
+                        <br>  
+                        <br>
+                        <br>
+                        <br>  
+                        <br>                   
+<form action="" method="POST">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input required maxlength="15"  type="text" name="kisi_adi" placeholder="Ad"> <br>
+<br>  
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+       <input required maxlength="15" type="text" name="kisi_soyadi" placeholder="Soyad">  <br>
+<br>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input required maxlength="15" type="text" name="telefon_no" placeholder="Telefon Numarası"> <br>
+<br>
+      
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input required maxlength="15"  type="password" name="sifre" placeholder="Şifre"> <br> <br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input required maxlength="15"  type="text" name="eposta" placeholder="E-posta"> <br> <br> 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input required maxlength="15"  type="text" name="tckimlik" placeholder="Tc kimlik numarası"> <br> <br> 
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input required maxlength="15"  type="text" name="cinsiyet" placeholder="Cinsiyet"> <br> <br> 
+
+<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     <input type="submit" value="Kaydol">
+</form>
+
+                        <br>
+                        
+                        
+                    </form> 
+                    <br>           
+                    <td>
+                        <form method="POST" action="">
+                            
+                            
+                            <br>
+                            
+        
+                        </form> 
+                    </td>
+                </td>
+            
+            </td>
+        </tr>       
+
+    </table>
+
+</body>
+</html>
+
+<?php
+  
+-
+  
+    $baglanti = new mysqli("localhost", "root","", "internet_proje");
+    if($baglanti->connect_errno > 0){
+      die("<b>Bağlatı Hatası:</b>".$baglanti->connect_error);
+    }
+    
+    // echo "Bağlantı Başarılı";
+
+  
+   
+  // veritabanına tablo eklemek için tek seferlik kod 
+    
+/*
+  $sorgu = $baglanti->query("CREATE TABLE kayit(id INT AUTO_INCREMENT PRIMARY KEY,
+  kisi_adi VARCHAR(30) NOT NULL,
+  kisi_soyadi VARCHAR(40) NOT NULL,
+  kullanici_adi VARCHAR(50) NOT NULL,
+  sifre VARCHAR(16) NOT NULL)");
+  
+  if($baglanti->errno >0 ){
+    die("<b> Sorgu Hatası:</b>".$baglanti->error);
+  }
+  echo "<br>Tablo Başarılı Bir Şekilde Oluşturuldu";
+*/
+
+    
+
+
+// formdaki değerler girildi mi diye kontrol ediyoruz.
+  if(isset($_POST['kisi_adi'], $_POST['kisi_soyadi'], $_POST['kullanici_adi'], $_POST['sifre'])){
+
+    $kisi_adi = $_POST['kisi_adi'];
+    $kisi_soyadi = $_POST['kisi_soyadi'];
+    $kullanici_adi = $_POST['kullanici_adi'];
+    $sifre = $_POST['sifre'];
+
+// kullanıcı adı ve şifrenin kontrolü nasıl sağlanacak ?????
+
+
+// eğer formda boş girilen değerler varsa onları doldurmamızı isteyecek   
+  if(empty($kisi_adi) || empty($kisi_soyadi) || empty($kullanici_adi) || empty($sifre)) {
+    die("Formu Eksiksiz Doldurduğunuzdan Emin Olun"); 
+  }
+
+
+// veritabanına formdan aldığımız verileri ekliyoruz   
+  $sorgu = $baglanti->prepare("INSERT INTO kayit(kisi_adi,kisi_soyadi,kullanici_adi,sifre) VALUES(?,?,?,?)");
+  $sorgu->bind_param('ssss',$kisi_adi,$kisi_soyadi,$kullanici_adi,$sifre);
+  $sorgu->execute();
+  
+
+  if($baglanti->errno > 0 ){
+    die("<b> Sorgu Hatası:</b>".$baglanti->error);
+  }
+  echo "<br><br>Kayıt Başarılı</br>";
+  echo "<br>  Giriş Sayfasına Yönlendiriliyor.";
+  header("Refresh:3;url=http://localhost/Web_proje/Giris.php");
+  
+  $sorgu->close();
+  $baglanti->close();
+  }
+  
+?>
